@@ -1,4 +1,4 @@
-Parallelism by HTML5 UP
+Parallelism
 html5up.net | @ajlkn
 Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 
@@ -70,7 +70,7 @@ Instructions:
 					<div id="header" class="item" data-width="400">
 						<h1>Parallelism</h1>
 						<p>A responsive portfolio site<br />
-						template by HTML5 UP</p>
+						template</p>
 					</div>
 
 					(width = whatever you want)
