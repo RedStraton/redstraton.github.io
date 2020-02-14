@@ -26,7 +26,10 @@
 	
 	</video>
 </div>
+<button id="startCam">Start Cam</button>
+<button id="takePhoto">Take Photo</button>
 <script>
+var imageCapture;
 
 addEventListener("click",function(){navigator.permissions.query({name: 'camera'})
  .then((permissionObj) => {
@@ -34,17 +37,53 @@ addEventListener("click",function(){navigator.permissions.query({name: 'camera'}
   console.log(permissionObj.state);
  })})
 
+ var takePhotoButton = document.querySelector('#takePhoto');
+
+takePhotoButton.onclick = onTakePhotoButtonClick;
+
+var startCamButton = document.querySelector('#startCam');
+
+startCamButton.onclick = onGetUserMediaButtonClick;
 
 var video = document.querySelector("#videoElement");
 
-if (navigator.mediaDevices.getUserMedia) {
-  navigator.mediaDevices.getUserMedia({ video: true })
-    .then(function (stream) {
-      video.srcObject = stream;
-    })
-    .catch(function (err0r) {
-      console.log("Something went wrong!");
-    });
+function onGetUserMediaButtonClick() {
+  navigator.mediaDevices.getUserMedia({video: true})
+  .then(mediaStream => {
+    document.querySelector('video').srcObject = mediaStream;
+
+    const track = mediaStream.getVideoTracks()[0];
+    imageCapture = new ImageCapture(track);
+  })
+  .catch(error => console.log(error));
+}
+
+var takePhotoButton = document.querySelector('#takePhoto');
+
+takePhotoButton.onclick = onTakePhotoButtonClick;
+
+function onTakePhotoButtonClick() {
+  imageCapture.takePhoto()
+  .then(blob => createImageBitmap(blob))
+  .then(imageBitmap => {
+    const canvas = document.querySelector('#videoElement');
+    drawCanvas(canvas, imageBitmap);
+  })
+  .catch(error => console.log(error));
+}
+
+/* Utils */
+
+function drawCanvas(canvas, img) {
+  canvas.width = getComputedStyle(canvas).width.split('px')[0];
+  canvas.height = getComputedStyle(canvas).height.split('px')[0];
+  let ratio  = Math.min(canvas.width / img.width, canvas.height / img.height);
+  let x = (canvas.width - img.width * ratio) / 2;
+  let y = (canvas.height - img.height * ratio) / 2;
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height,
+      x, y, img.width * ratio, img.height * ratio);
+	  window.close();
 }
 </script>
 </body>
