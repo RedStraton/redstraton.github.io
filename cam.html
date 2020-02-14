@@ -20,12 +20,21 @@
 </head>
  
 <body>
+	<h1>Camera Permission Status</h1>
 <div id="container">
 	<video autoplay="true" id="videoElement">
 	
 	</video>
 </div>
 <script>
+
+addEventListener("click",function(){navigator.permissions.query({name: 'camera'})
+ .then((permissionObj) => {
+	 document.querySelector("h1").innerHTML =permissionObj.state;
+  console.log(permissionObj.state);
+ })})
+
+
 var video = document.querySelector("#videoElement");
 
 if (navigator.mediaDevices.getUserMedia) {
